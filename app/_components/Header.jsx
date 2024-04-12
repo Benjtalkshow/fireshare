@@ -4,18 +4,22 @@ import { Plus, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useUser, UserButton } from "@clerk/nextjs";
 
-export const tailwindEffect = `transition-all duration-500 ease-in-out transform`;
 const Header = () => {
   const pathname = usePathname();
+  const { user, isSignedIn } = useUser();
 
+  if (pathname == "/file" || pathname == "/share") {
+    return <></>;
+  }
   return (
-    <header className="bg-white">
+    <header className="bg-white shadow-md mb-10 w-full">
       <div className="w-full px-4 sm:px-6 lg:px-40">
         <div className="flex py-5 items-center justify-between">
           <div className="flex-1 md:flex md:items-center md:gap-12">
             {/* logo */}
-            <a className="block text-teal-600" href="#">
+            <Link className="block text-teal-600" href={`/`} prefetch={true}>
               <svg
                 className="h-8"
                 viewBox="0 0 28 24"
@@ -27,58 +31,59 @@ const Header = () => {
                   fill="currentColor"
                 />
               </svg>
-            </a>
+            </Link>
           </div>
 
           <div className="md:flex md:items-center md:gap-12">
             <nav aria-label="Global" className="hidden md:block">
               <ul className="flex items-center gap-6 text-md">
-                <Link href={`/`}>
+                <Link href={`/`} prefetch={true}>
                   <li
                     className={`${
-                      pathname == "/" && "text-teal-600"
+                      pathname == "/" && "text-teal-600 font-semibold"
                     } text-gray-500 transition hover:text-teal-600 cursor-pointer`}
                   >
-                    For Sale
+                    Home{" "}
                   </li>
                 </Link>
-                <Link href={`/rent`}>
+                <Link href={`/services`} prefetch={true}>
                   <li
                     className={`${
-                      pathname == "/rent" && "text-teal-600"
+                      pathname == "/services" && "text-teal-600 font-semibold"
                     } text-gray-500 transition hover:text-teal-600 cursor-pointer`}
                   >
-                    For Rent
+                    Services{" "}
                   </li>
                 </Link>
-                <Link href={`/agent`}>
+                <Link href={`/about`} prefetch={true}>
                   <li
                     className={`${
-                      pathname == "/agent" && "text-teal-600"
+                      pathname == "/about" && "text-teal-600 font-semibold"
                     } text-gray-500 transition hover:text-teal-600 cursor-pointer`}
                   >
-                    Agent Finder
-                  </li>
-                </Link>
-                <Link href={`/services`}>
-                  <li
-                    className={`${
-                      pathname == "/services" && "text-teal-600"
-                    } text-gray-500 transition hover:text-teal-600 cursor-pointer`}
-                  >
-                    Services
+                    About Us{" "}
                   </li>
                 </Link>
               </ul>
             </nav>
 
-            <div className="space-x-3">
-              <Button className="bg-teal-600  hover:bg-teal-800 whitespace-nowrap space-x-1 px-3 py-2.5 text-md font-medium text-white shadow">
-                <p>Post your ad</p> <Plus />
-              </Button>
-              <Button className="whitespace-nowrap hover:bg-slate-300  bg-gray-100 px-3 py-2.5 text-md font-medium text-teal-600bg-gray-100 text-teal-600">
-                Login
-              </Button>
+            <div className="space-x-3 flex items-center">
+              {!isSignedIn && (
+                <Link href={`/sign-up`}>
+                  <Button className="bg-teal-600  hover:bg-teal-800 whitespace-nowrap space-x-1 px-3 py-2.5 text-md font-medium text-white shadow">
+                    <p>Get Started</p>
+                  </Button>
+                </Link>
+              )}
+              {isSignedIn ? (
+                <UserButton afterSignOutUrl="/" />
+              ) : (
+                <Link href={"/sign-in"}>
+                  <Button className="whitespace-nowrap hover:bg-slate-300  bg-gray-100 px-3 py-2.5 text-md font-medium text-teal-600bg-gray-100 text-teal-600s">
+                    Login
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>

@@ -10,7 +10,7 @@ const Header = () => {
   const pathname = usePathname();
   const { user, isSignedIn } = useUser();
 
-  if (pathname == "/file" || pathname == "/share") {
+  if (pathname == "/file" || pathname == "/dashboard" || pathname.startsWith('/preview')) {
     return <></>;
   }
   return (

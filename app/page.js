@@ -4,7 +4,7 @@ import { tailwindPadding } from "./_data/constants";
 
 export default function Home() {
   return (
-    <main className={`${tailwindPadding}`}>
+    <main className={`${tailwindPadding} bg-gray-100`}>
       <Hero />
       <Search />
     </main>

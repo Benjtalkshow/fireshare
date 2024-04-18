@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import UploadPreview from "./UploadPreview";
 import { useUser } from "@clerk/nextjs";
-import { app } from "@/firebase/firebase";
+import { app } from "../../../firebase/firebase";
 import {
   getDownloadURL,
   getStorage,
@@ -20,8 +20,8 @@ import {
   getDoc,
   collection,
 } from "firebase/firestore";
-import RandomStrings from "@/utils/RandomString";
-import { saveInfo } from "@/utils/firebase";
+import RandomStrings from "../../../utils/RandomString";
+import { saveInfo } from "../../../utils/firebase";
 import { useRouter } from "next/navigation";
 
 

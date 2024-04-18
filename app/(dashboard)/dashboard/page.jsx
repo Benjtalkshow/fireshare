@@ -1,4 +1,4 @@
-import UploadForm from '@/app/_components/dashboard/UploadForm';
+import UploadForm from '../../_components/dashboard/UploadForm';
 import React from 'react'
 
 const Share = () => {

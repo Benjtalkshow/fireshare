@@ -49,10 +49,10 @@ const Sidebar = () => {
               <File size={28} /><label className="cursor-pointer">My Files</label>
             </li>
           </Link>
-          <Link href={`#`} prefetch={true}>
+          <Link href={`/upgrade`} prefetch={true}>
             <li
               className={`${
-                pathname == "#" &&
+                pathname == "/upgrade" &&
                 "bg-gray-100  text-teal-600 rounded-tr-full rounded-br-full"
               } text-gray-500 flex items-center gap-3 py-3 mb-3 px-4 font-semibold  transition hover:text-teal-600 cursor-pointer`}
             >

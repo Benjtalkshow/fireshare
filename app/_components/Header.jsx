@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
 import { Plus, Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser, UserButton } from "@clerk/nextjs";
@@ -10,7 +9,13 @@ const Header = () => {
   const pathname = usePathname();
   const { user, isSignedIn } = useUser();
 
-  if (pathname == "/file" || pathname == "/dashboard" || pathname.startsWith('/preview')) {
+  if (
+    pathname == "/file" ||
+    pathname == "/upgrade" ||
+    pathname == "/dashboard" ||
+    pathname.startsWith("/preview") ||
+    pathname.startsWith("/view")
+  ) {
     return <></>;
   }
   return (
@@ -70,18 +75,18 @@ const Header = () => {
             <div className="space-x-3 flex items-center">
               {!isSignedIn && (
                 <Link href={`/sign-up`}>
-                  <Button className="bg-teal-600  hover:bg-teal-800 whitespace-nowrap space-x-1 px-3 py-2.5 text-md font-medium text-white shadow">
+                  <button className="bg-teal-600  hover:bg-teal-800 whitespace-nowrap space-x-1 px-3 py-2.5 text-md font-medium text-white shadow">
                     <p>Get Started</p>
-                  </Button>
+                  </button>
                 </Link>
               )}
               {isSignedIn ? (
                 <UserButton afterSignOutUrl="/" />
               ) : (
                 <Link href={"/sign-in"}>
-                  <Button className="whitespace-nowrap hover:bg-slate-300  bg-gray-100 px-3 py-2.5 text-md font-medium text-teal-600bg-gray-100 text-teal-600s">
+                  <button className="whitespace-nowrap hover:bg-slate-300  bg-gray-100 px-3 py-2.5 text-md font-medium text-teal-600bg-gray-100 text-teal-600s">
                     Login
-                  </Button>
+                  </button>
                 </Link>
               )}
             </div>

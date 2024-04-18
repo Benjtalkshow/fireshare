@@ -1,5 +1,5 @@
-import { getFirestore, doc, setDoc, getDoc, collection } from "firebase/firestore";
-import { app } from "@/firebase/firebase";
+import { getFirestore, doc, setDoc, getDoc, collection, updateDoc } from "firebase/firestore";
+import { app } from "../firebase/firebase";
 import { toast } from"react-hot-toast";
 import {
     getDownloadURL,
@@ -10,59 +10,7 @@ import {
 import RandomStrings from "./RandomString";
 
 const db = getFirestore(app)
-export const   handleFileUpload = async (user, file) => {
-    const imageRef = ref(storage, "upload/" + file?.name);
-    const uploadTask = uploadBytesResumable(imageRef, file, metadata);
-  
-    return new Promise((resolve, reject) => {
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const currentProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + currentProgress + "% done");
-        },
-        (error) => {
-          console.error("Error uploading file:", error);
-          reject(error);
-        },
-        async () => {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          console.log("File available at", downloadURL);
-  
-          const db = getFirestore(app);
-          const userRef = doc(db, "users", user.id);
-          const userSnapshot = await getDoc(userRef);
-  
-          if (!userSnapshot.exists()) {
-            // Create a new user document
-            await setDoc(userRef, {
-              id: user.id,
-              email: user.primaryEmailAddress.emailAddress,
-              createdAt: new Date(),
-              files: [
-                {
-                  name: file.name,
-                  url: downloadURL,
-                  createdAt: new Date(),
-                },
-              ],
-            });
-          } else {
-            // Update the existing user document
-            await setDoc(
-              userRef,
-              {
-                files: [...userSnapshot.data().files, { name: file.name, url: downloadURL, createdAt: new Date() }],
-              },
-              { merge: true }
-            );
-          }
-  
-          resolve(downloadURL);
-        }
-      );
-    });
-  };
+
 
 
 
@@ -78,23 +26,24 @@ export const checkUserFileLimit = async (user) => {
     return false;
   };
 
-  export const getFileInfo = async (fileid) => {
+  export const getFileInfo = async (userId) => {
     try {
-      const docRef = doc(db, "usersAndUploads", fileid);
+      const docRef = doc(db, "usersAndUploads", userId);
       const userSnapshot = await getDoc(docRef);
   
       if (userSnapshot.exists()) {
-        return userSnapshot.data();
+        const fileInfo = userSnapshot.data();
+        console.log("File info:", fileInfo);
+        return fileInfo;
       } else {
         console.log("No such document");
-        throw new Error("No such document");
+        return null;
       }
     } catch (error) {
       console.error("Error getting file info:", error);
       throw error;
     }
-    };
-
+  };
   export const saveInfo = async (file, fileUrl, user) => {
     try {
       const clerkUserId = user?.id;
@@ -119,5 +68,17 @@ export const checkUserFileLimit = async (user) => {
     } catch (error) {
       console.error("Error writing document: ", error);
       toast.error("Error writing document: ", error)
+    }
+  };
+
+
+  
+  export const updateFilePassword = async (userId, password) => {
+    try {
+      const docRef = doc(db, "usersAndUploads", userId);
+      await setDoc(docRef, { password: password }, { merge: true });
+    } catch (error) {
+      console.error("Error getting file info:", error);
+      throw error;
     }
   };

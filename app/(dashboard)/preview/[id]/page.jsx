@@ -1,7 +1,8 @@
-"use client"
-import ImageSection from "@/app/_components/preview/ImageSection";
-import InputSection from "@/app/_components/preview/InputSection";
-import { getFileInfo } from "@/utils/firebase";
+"use client";
+import ImageSection from "../../../_components/preview/ImageSection";
+import InputSection from "../../../_components/preview/InputSection";
+import { tailwindPadding } from "../../../_data/constants";
+import { getFileInfo } from "../../../../utils/firebase";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -19,20 +20,31 @@ const Preivew = () => {
         console.error("Error fetching file info:", error);
       }
     };
-  
+
     fetchFileInfo();
   }, [id]);
 
   if (!fileInfo) {
-    return <div>Loading...</div>;
+    return <div>Loading or No File Found</div>;
   }
 
   return (
-    <div>
-        <div className="w-full flex">
-            <ImageSection id={id} url={fileInfo.fileUrl}/>
-            <InputSection id={id}/>
-        </div>
+    <div
+      className={`w-full px-0 md:px-10 mt-10  lg:px-20 h-full flex justify-center items-center`}
+    >
+      <div className={`w-full flex flex-col md:flex-row justify-center gap-5`}>
+        <ImageSection
+          url={fileInfo?.fileUrl}
+          imageName={fileInfo?.fileName}
+          imageType={fileInfo?.fileType}
+          imageSize={fileInfo?.fileSize}
+        />
+        <InputSection
+          id={id}
+          shortUrl={fileInfo?.shortUrl}
+          userEmail={fileInfo?.userEmail}
+        />
+      </div>
     </div>
   );
 };

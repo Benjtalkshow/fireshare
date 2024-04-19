@@ -1,45 +1,35 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "../../components/ui/button";
 import React from "react";
-import { tailwindEffect, tailwindPadding } from "../_data/constants";
+import {
+  tailwindEffect,
+  tailwindMargin,
+  tailwindPadding,
+} from "../_data/constants";
 import Link from "next/link";
 
 const Hero = () => {
   return (
-    <section className={`bg-transparent ${tailwindEffect}  mt-20`}>
-      <div className="text-gray-600 body-font">
-        <div className="container mx-auto flex px-5  items-center justify-center flex-col">
-          {/* badge */}
-          <span className="inline-flex items-center justify-center rounded-full bg-teal-100 px-2.5 py-2 mb-5 text-teal-600">
-            <p className="whitespace-nowrap text-sm">
-              😊 Welcome to your Home Service Delivery World
-            </p>
-          </span>
-          <div className="text-center lg:w-2/3 w-full">
-            <h1 className="title-font sm:text-5xl font-extrabold  text-3xl mb-2 sm:mb-4  text-black">
-              Microdosing synth tattooed
-            </h1>
-            <h1 className="title-font sm:text-5xl text-3xl mb-4 font-extrabold text-teal-600">
-              Vexillologist
-            </h1>
-            <p className="mb-8 leading-relaxed">
-              Meggings kinfolk echo park stumptown DIY, kale chips beard
-              jianbing tousled. Chambray dreamcatcher trust fund, kitsch vice
-              godard disrupt ramps hexagon mustache umami snackwave tilde
-              chillwave ugh. Pour-over meditation PBR&amp;B pickled ennui celiac
-              mlkshk freegan photo booth af fingerstache pitchfork.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-5">
-              <Link href={`/sign-up`}>
-                <Button className="bg-teal-600 w-full sm:w-fit  hover:bg-teal-800 whitespace-nowrap space-x-1 px-3 py-2.5 text-md font-medium text-white shadow">
-                  <p>Get Started</p>
-                </Button>
-              </Link>
-              <Link href={"/sign-in"}>
-                <Button className="whitespace-nowrap w-full sm:w-fit hover:bg-slate-300  bg-gray-300 px-3 py-2.5 text-md font-medium text-teal-600">
-                  Login
-                </Button>
-              </Link>
-            </div>
+    <section className={`${tailwindEffect} ${tailwindMargin}`}>
+      <div className="bg-teal-500 text-white py-32 px-4 sm:px-8 md:px-16 lg:px-24 relative">
+        <div className="max-w-screen-xl mx-auto relative z-10">
+          <h1 className="text-4xl text-center sm:text-left sm:text-5xl md:text-6xl font-bold mb-4">
+            Securely Share Your Files
+          </h1>
+          <p className="text-lg sm:text-xl text-center sm:text-left md:text-2xl mb-8 text-gray-200">
+            Our file-sharing platform makes it easy to upload, store, and share
+            your files with anyone, anywhere.
+          </p>
+          <div className="flex w-full gap-4 justify-center sm:justify-normal">
+            <Link href={`/sign-up`}>
+            <button className="bg-white text-teal-600 border-[1px] border-white hover:bg-teal-900 whitespace-nowrap space-x-1 px-3 py-2.5 text-md font-medium hover:text-white shadow">
+              <p>Get Started</p>
+            </button>
+            </Link>
+            <Link href={`/sign-in`}>
+            <button className="whitespace-nowrap hover:bg-slate-300  bg-transparent px-3 py-2.5 text-md font-medium border-[1px] border-white text-white hover:text-gray-300">
+              Login
+            </button>
+            </Link>
           </div>
         </div>
       </div>

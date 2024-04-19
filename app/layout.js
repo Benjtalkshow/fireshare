@@ -1,8 +1,9 @@
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
-import Provider from "./Provider";
-import { ClerkProvider } from "@clerk/nextjs";
+import Providers from "./providers";
+import { ClerkProvider, ClerkLoaded, ClerkLoading } from "@clerk/nextjs";
 import { Toaster } from "react-hot-toast";
+import PageLoader from "./_components/PageLoader";
 
 const inter = Outfit({ subsets: ["latin"] });
 
@@ -16,8 +17,13 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en">
         <body className={`body ${inter.className} bg-gray-100`}>
-        <Toaster position="top-right" />
-          <Provider>{children}</Provider>
+          <Toaster position="top-right" />
+          <ClerkLoading>
+            <PageLoader />
+          </ClerkLoading>
+          <ClerkLoaded>
+            <Providers>{children}</Providers>
+          </ClerkLoaded>
         </body>
       </html>
     </ClerkProvider>

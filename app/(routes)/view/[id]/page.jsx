@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { getFileInfo } from "../../../../utils/firebase";
 import { View as ViewCard } from "../../../_components/View";
 
@@ -22,12 +22,10 @@ const View = () => {
     fetchFileInfo();
   }, [id]);
 
-  if (!fileInfo) {
-    return <div>Loading or No File Found</div>;
-  }
+ 
 
   return (
-    <div className="w-full flex justify-center items-center h-screen">
+    <div className="w-full px-3 flex justify-center items-center h-screen">
       <ViewCard fileInfo={fileInfo} />
     </div>
   );

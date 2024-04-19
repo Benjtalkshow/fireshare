@@ -6,24 +6,25 @@ import { ArrowLeft, Download } from "lucide-react";
 import { tailwindEffect } from "../_data/constants";
 import Link from "next/link";
 import { Input } from "../../components/ui/input";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 export const View = ({ fileInfo }) => {
-const [password, setPassword] = useState("")
+  const [password, setPassword] = useState("");
 
   const handleDownload = () => {
     window.open(`${fileInfo?.fileUrl}`, "_blank");
   };
   return (
+    <>
     <section>
-      <Link href={`/`} className="flex mb-3 items-center gap-2 font-semibold">
+      <Link href={`/`} className="flex mb-3 items-center gap-2 font-semibold cursor-pointer">
         <ArrowLeft size={26} />
-        <label>
+        <label className="text-md">
           Visit <span className="text-teal-600">FireShare</span>
         </label>
       </Link>
       <div
-        className={`${tailwindEffect} p-10 bg-white shadow-md rounded-md m-auto`}
+        className={`${tailwindEffect} p-5 sm:p-10 bg-white shadow-md rounded-md m-auto`}
       >
         <h1 className="font-bold text-xl">
           <span className="text-teal-600">{fileInfo?.userName}</span> shared you
@@ -34,7 +35,7 @@ const [password, setPassword] = useState("")
           width={200}
           height={200}
           alt="folder.png"
-          className="my-5 m-auto"
+          className="my-5 m-auto w-20 sm:w-1/2 h-20 sm:h-1/2"
         />
         {!fileInfo?.password.trim() || fileInfo?.password.trim() < 3 ? (
           <></>
@@ -70,14 +71,19 @@ const [password, setPassword] = useState("")
         </ul>
         <div className="w-full flex justify-center mt-5">
           <Button
-            className="text-white gap-3 w-full bg-teal-600 flex items-center  px-5 py-3 rounded-md"
+            className="text-white gap-3 w-full bg-teal-600 hover:bg-teal-700 flex items-center  px-5 py-3 rounded-md"
             onClick={handleDownload}
-            disabled={password.trim().length < 3 ? true : false}
+            disabled={
+              fileInfo &&
+              fileInfo.password.trim() &&
+              password.trim() !== fileInfo.password.trim()
+            }
           >
             <span>Download</span> <Download size={20} />
           </Button>
         </div>
       </div>
     </section>
+    </>
   );
 };

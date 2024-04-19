@@ -56,7 +56,6 @@ const UploadForm = () => {
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         const currentProgress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log("Upload is " + currentProgress + "% done");
@@ -126,7 +125,6 @@ const UploadForm = () => {
                 {" "}
                 Click to upload{" "}
               </span>{" "}
-              or drag and drop
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">
               SVG, PNG, JPG or GIF (max 2MB)

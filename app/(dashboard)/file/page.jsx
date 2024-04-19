@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import Table from "../../_components/Table";
 
 const File = () => {
   return (
-    <div>MyFiles</div>
-  )
-}
+    <div>
+      <Table />
+    </div>
+  );
+};
 
 export default File;

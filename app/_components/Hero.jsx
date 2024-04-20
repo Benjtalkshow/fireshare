@@ -26,7 +26,7 @@ const Hero = () => {
             </button>
             </Link>
             <Link href={`/sign-in`}>
-            <button className="whitespace-nowrap hover:bg-slate-300  bg-transparent px-3 py-2.5 text-md font-medium border-[1px] border-white text-white hover:text-gray-300">
+            <button className="whitespace-nowrap hover:bg-teal-900  bg-transparent px-3 py-2.5 text-md font-medium border-[1px] border-white text-white hover:text-gray-300">
               Login
             </button>
             </Link>

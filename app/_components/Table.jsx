@@ -1,137 +1,54 @@
-import React from 'react';
+"use client"
+import { Table as TableContainer, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow, } from "../../components/ui/table";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
+import { useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs";
+import { fetchUserFiles } from "../../utils/firebase";
+import Link from "next/link";
 
-const Table = () => {
+
+export default function Table() {
+  const { user, isSignedIn } = useUser();
+  const [files, setFiles] = useState([]);
+
+  useEffect(() => {
+    if (isSignedIn && user) {
+      const fetchFiles = async () => {
+        const userFiles = await fetchUserFiles(user.id);
+        setFiles(userFiles);
+      };
+      fetchFiles();
+    }
+  }, [user, isSignedIn]);
+
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
-        <thead className="">
-          <tr>
-            <th className="sticky inset-y-0 start-0 bg-white pr-10  py-2">
-              <label htmlFor="SelectAll" className="sr-only">
-                Select All
-              </label>
-              <input
-                type="checkbox"
-                id="SelectAll"
-                className="size-5 rounded border-gray-300"
-              />
-            </th>
-            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              Name
-            </th>
-            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              Date of Birth
-            </th>
-            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              Role
-            </th>
-            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              Salary
-            </th>
-            <th className="px-4 py-2"></th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200">
-          <tr>
-            <td className="sticky inset-y-0 start-0 bg-white px-4 py-2">
-              <label className="sr-only" htmlFor="Row1">
-                Row 1
-              </label>
-              <input
-                className="size-5 rounded border-gray-300"
-                type="checkbox"
-                id="Row1"
-              />
-            </td>
-            <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              John Doe
-            </td>
-            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-              24/05/1995
-            </td>
-            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-              Web Developer
-            </td>
-            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-              $120,000
-            </td>
-            <td className="whitespace-nowrap px-4 py-2">
-              <a
-                href="#"
-                className="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
-              >
-                View
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td className="sticky inset-y-0 start-0 bg-white px-4 py-2">
-              <label className="sr-only" htmlFor="Row2">
-                Row 2
-              </label>
-              <input
-                className="size-5 rounded border-gray-300"
-                type="checkbox"
-                id="Row2"
-              />
-            </td>
-            <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              Jane Doe
-            </td>
-            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-              04/11/1980
-            </td>
-            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-              Web Designer
-            </td>
-            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-              $100,000
-            </td>
-            <td className="whitespace-nowrap px-4 py-2">
-              <a
-                href="#"
-                className="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
-              >
-                View
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td className="sticky inset-y-0 start-0 bg-white px-4 py-2">
-              <label className="sr-only" htmlFor="Row3">
-                Row 3
-              </label>
-              <input
-                className="size-5 rounded border-gray-300"
-                type="checkbox"
-                id="Row3"
-              />
-            </td>
-            <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              Gary Barlow
-            </td>
-            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-              24/05/1995
-            </td>
-            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-              Singer
-            </td>
-            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-              $20,000
-            </td>
-            <td className="whitespace-nowrap px-4 py-2">
-              <a
-                href="#"
-                className="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
-              >
-                View
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <section className="px-2 sm:px-3 md:px-10 lg:px-20">
+      <TableContainer>
+        <TableCaption></TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead className=""> <Input type="checkbox" className="w-4 h-4" /> </TableHead>
+            <TableHead className="">File Name</TableHead>
+            <TableHead>File Type</TableHead>
+            <TableHead>File Size</TableHead>
+            <TableHead className="">File URL</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {files.map((file, index) => (
+            <TableRow key={index}>
+              <TableCell className="font-medium"><Input type="checkbox" className="w-4 h-4" /></TableCell>
+              <TableCell className="font-medium">{file?.fileName}</TableCell>
+              <TableCell>{file?.fileType}</TableCell>
+              <TableCell>{(file?.fileSize / 1024 / 1024).toFixed(2) + `MB`}</TableCell>
+              <TableCell className="">{file?.shortUrl}</TableCell>
+              <TableCell className=""><Link href={`/preview/${file?.doc_id}`}><Button className="bg-teal-600">View</Button></Link> </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        <TableFooter></TableFooter>
+      </TableContainer>
+    </section>
   );
-};
-
-export default Table;
+}

@@ -1,4 +1,4 @@
-import { getFirestore, doc, setDoc, getDoc, collection, updateDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, collection, updateDoc, getDocs } from "firebase/firestore";
 import { app } from "../firebase/firebase";
 import { toast } from"react-hot-toast";
 import {
@@ -80,5 +80,18 @@ export const checkUserFileLimit = async (user) => {
     } catch (error) {
       console.error("Error getting file info:", error);
       throw error;
+    }
+  };
+
+  export const fetchUserFiles = async (userId) => {
+    try {
+      const db = getFirestore(app);
+      const filesCollection = collection(db, "usersAndUploads");
+      const querySnapshot = await getDocs(filesCollection);
+      const userFiles = querySnapshot.docs.filter(doc => doc.data().user_id === userId);
+      return userFiles.map(doc => doc.data());
+    } catch (error) {
+      console.error("Error fetching user files:", error);
+      return [];
     }
   };

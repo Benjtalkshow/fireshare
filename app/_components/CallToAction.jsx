@@ -14,7 +14,7 @@ const CallToAction = () => {
         with.
       </p>
       <Link href={`/sign-up`}>
-            <button className="bg-white text-teal-600 border-[1px] border-white hover:bg-teal-900 whitespace-nowrap space-x-1 px-3 py-2.5 text-md font-medium hover:text-white shadow">
+            <button className="bg-white text-teal-600 border-[1px] border-white hover:bg-teal-900 whitespace-nowrap space-x-1 px-[2rem] py-2.5 text-md font-medium hover:text-white shadow">
               <p>Sign Up</p>
             </button>
             </Link>

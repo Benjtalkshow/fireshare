@@ -32,15 +32,29 @@ const Header = () => {
           <div className="md:flex md:items-center md:gap-12">
             <nav aria-label="Global" className="hidden md:block">
               <ul className="flex items-center gap-6 text-md">
-                <Link href={`/`} prefetch={true}>
-                  <li
-                    className={`${
-                      pathname == "/" && "text-teal-600 font-semibold"
-                    } text-gray-500 transition hover:text-teal-600 cursor-pointer`}
-                  >
-                    Home{" "}
-                  </li>
-                </Link>
+                {pathname == "/" && isSignedIn ? (
+                  <Link href={`/dashboard`} prefetch={true}>
+                    <li
+                      className={`${
+                        pathname == "/dashboard" &&
+                        "text-teal-600 font-semibold"
+                      } text-gray-500 transition hover:text-teal-600 cursor-pointer`}
+                    >
+                      Dashboard{" "}
+                    </li>
+                  </Link>
+                ) : ( 
+                  <Link href={`/`} prefetch={true}>
+                    <li
+                      className={`${
+                        pathname == "/" && "text-teal-600 font-semibold hidden"
+                      } text-gray-500 transition hover:text-teal-600 cursor-pointer`}
+                    >
+                      Home{" "}
+                    </li>
+                  </Link>
+                  
+                )}
               </ul>
             </nav>
 

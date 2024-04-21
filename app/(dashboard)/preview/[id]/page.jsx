@@ -25,7 +25,7 @@ const Preivew = () => {
   }, [id]);
 
   if (!fileInfo) {
-    return <div>Loading or No File Found</div>;
+    return <div className="w-full text-center font-semibold p-2 sm:p-5 md:p-10 lg:p-20">Loading or No File Found</div>;
   }
 
   return (

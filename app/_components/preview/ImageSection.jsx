@@ -9,7 +9,7 @@ const ImageSection = ({ url, imageName, imageType, imageSize }) => {
     >
       <div className="img overflow-clip group">
         <Image
-          src={url}
+          src={url || `/thumbnail.jpg`}
           width={250}
           height={250}
           className="m-auto w-[200px] h-[200px] transition-transform duration-300 ease-in-out group-hover:scale-110"

@@ -25,7 +25,7 @@ const View = () => {
  
 
   return (
-    <div className="w-full px-3 flex justify-center items-center h-screen">
+    <div className="w-full px-3  flex justify-center items-center h-[100%]">
       <ViewCard fileInfo={fileInfo} />
     </div>
   );

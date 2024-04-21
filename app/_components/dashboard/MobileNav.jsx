@@ -23,7 +23,7 @@ const MobileNav = () => {
           <Menu />
         </div>
       </SheetTrigger>
-      <SheetContent side="left" className="px-0 w-1/2 grid md:hidden">
+      <SheetContent side="left" className="px-0 w-[73%] grid md:hidden">
         <div className="flex h-screen flex-col justify-between  bg-white">
           <div className="pb-6">
             {/* logo */}

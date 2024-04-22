@@ -28,13 +28,13 @@ const UploadForm = () => {
   const { user, isSignedIn } = useUser();
   const [progress, setProgress] = useState();
   const [id, setId] = useState();
-  const [uploadStatus, setUploadStatus] = useState("Upload"); // Add a state variable for upload status
+  const [uploadStatus, setUploadStatus] = useState("Upload");
   const storage = getStorage(app);
   const router = useRouter();
   let intervalId;
 
   const handleFile = (file) => {
-    const maxFileSize = 2000000;   
+    const maxFileSize = 2000000;
     if (file && file.size > maxFileSize) {
       console.log("file is greater than 2MB");
       toast.error("File size should be less than 2MB");
@@ -48,7 +48,7 @@ const UploadForm = () => {
         setFile(null);
         return;
       }
-  
+
       setFile(file);
       console.log(file);
     }
@@ -57,39 +57,43 @@ const UploadForm = () => {
   const metadata = { contentType: "" };
 
   const submitFile = async () => {
-    setUploadStatus("Uploading..."); // Update the upload status when the upload starts
+    setUploadStatus("Uploading...");
     const imageRef = ref(storage, "upload/" + file?.name);
     const uploadTask = uploadBytesResumable(imageRef, file, metadata);
 
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        const currentProgress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        const currentProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log("Upload is " + currentProgress + "% done");
         setProgress(currentProgress);
       },
       (error) => {
-        // Handle upload error
         console.error("Error uploading file:", error);
         toast.error("Error uploading file. Please try again.");
         setFile(null);
-        setUploadStatus("Upload"); // Reset the upload status on error
+        setUploadStatus("Upload");
       },
       async () => {
-        // Upload successful
         try {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
           console.log("File available at", downloadURL);
           const doc_id = await saveInfo(file, downloadURL, user);
           setId(doc_id);
-          router.push("/preview/" + doc_id); // Use doc_id instead of id
-          setUploadStatus("Uploaded!"); // Update the upload status on success
+
+          const redirectingToast = toast.loading("Redirecting...");
+
+          setTimeout(() => {
+            router.push("/preview/" + doc_id);
+            toast.dismiss(redirectingToast);
+          }, 4000 * 2);
+
+          setUploadStatus("Uploaded!");
         } catch (error) {
           console.error("Error saving file info:", error);
           toast.error("Error saving file info. Please try again.");
           setFile(null);
-          setUploadStatus("Upload"); // Reset the upload status on error
+          setUploadStatus("Upload");
         }
       }
     );

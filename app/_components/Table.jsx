@@ -26,7 +26,7 @@ export default function Table() {
   const [files, setFiles] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (isSignedIn && user) {
@@ -52,30 +52,37 @@ export default function Table() {
     );
   };
 
- 
-  const handleDeleteFiles = async () => {
-    if (selectedFiles.length === 0) {
+  const handleDeleteFiles = async (fileIds) => {
+    if (fileIds.length === 0) {
       console.log("No files selected");
       toast.error("No files selected");
       return;
     }
-  
-    if (selectedFiles.length === files.length) {
-      await deleteMultipleFiles(user?.id, user?.fullName);
-    } else {
-      for (const fileId of selectedFiles) {
-        const fileToDelete = files.find((file) => file.doc_id === fileId);
-        if (fileToDelete) {
-          await deleteFile(fileId, fileToDelete.fileName);
+
+    const deletingToast = toast.loading("Deleting...");
+
+    try {
+      if (fileIds.length === files.length) {
+        await deleteMultipleFiles(user?.id, user?.fullName);
+      } else {
+        for (const fileId of fileIds) {
+          const fileToDelete = files.find((file) => file.doc_id === fileId);
+          if (fileToDelete) {
+            await deleteFile(fileId, fileToDelete.fileName);
+          }
         }
       }
+
+      const updatedFiles = files.filter((file) => !fileIds.includes(file.doc_id));
+      setFiles(updatedFiles);
+      setSelectedFiles([]);
+      toast.dismiss(deletingToast);
+      toast.success("Deleted!!");
+    } catch (error) {
+      console.error("Error deleting files:", error);
+      toast.dismiss(deletingToast);
+      toast.error("Error deleting files. Please try again.");
     }
-  
-    const updatedFiles = files.filter(
-      (file) => !selectedFiles.includes(file.doc_id)
-    );
-    setFiles(updatedFiles);
-    setSelectedFiles([]);
   };
 
   return (

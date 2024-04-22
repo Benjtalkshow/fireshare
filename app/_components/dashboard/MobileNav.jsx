@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -14,9 +14,14 @@ import Logo from "../Logo";
 const MobileNav = () => {
   const pathname = usePathname();
   const { user, isSignedIn } = useUser();
+  const [sheetOpen, setSheetOpen] = useState(false);
+
+  const handleLinkClick = () => {
+    setSheetOpen(false);
+  };
 
   return (
-    <Sheet>
+    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
         {" "}
         <div className="bg-gray-300 p-1 grid md:hidden">
@@ -31,7 +36,12 @@ const MobileNav = () => {
               <Logo />
             </div>
             <ul className="mt-6 space-y-10">
-              <Link href={`/dashboard`} prefetch={true}>
+              {user && isSignedIn && (
+                <li className="px-4 py-4 font-semibold text-xl">
+                  Hi, {user?.fullName}✌️
+                </li>
+              )}
+              <Link href={`/dashboard`} prefetch={true} onClick={handleLinkClick}>
                 <li
                   className={`${
                     pathname == "/dashboard" &&
@@ -42,7 +52,7 @@ const MobileNav = () => {
                   <label className="cursor-pointer">Dashboard</label>
                 </li>
               </Link>
-              <Link href={`/file`} prefetch={true}>
+              <Link href={`/file`} prefetch={true} onClick={handleLinkClick}>
                 <li
                   className={`${
                     pathname == "/file" &&
@@ -53,7 +63,7 @@ const MobileNav = () => {
                   <label className="cursor-pointer">My Files</label>
                 </li>
               </Link>
-              <Link href={`/upgrade`} prefetch={true}>
+              <Link href={`/upgrade`} prefetch={true} onClick={handleLinkClick}>
                 <li
                   className={`${
                     pathname == "/upgrade" &&
@@ -67,29 +77,32 @@ const MobileNav = () => {
             </ul>
           </div>
 
-          <div className="sticky inset-x-0 bottom-0 border-t border-gray-100">
-            <a
-              href="#"
-              className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50"
-            >
-              <img
-                alt=""
-                src={user?.imageUrl}
-                className="size-10 rounded-full object-cover"
-              />
+          {user && isSignedIn && (
+            <div className="sticky inset-x-0 bottom-0 border-t border-gray-100">
+              <a
+                href="#"
+                className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50"
+              >
+                <img
+                  alt=""
+                  src={user?.imageUrl}
+                  className="size-10 rounded-full object-cover"
+                />
 
-              <div>
-                <p className="text-xs">
-                  <strong className="font-medium md:block">
-                    {user?.fullName || null}
-                  </strong> <br />
-                  <span className="">
-                    {user?.primaryEmailAddress?.emailAddress || null}
-                  </span>
-                </p>
-              </div>
-            </a>
-          </div>
+                <div>
+                  <p className="text-xs">
+                    <strong className="font-medium md:block">
+                      {user?.fullName || null}
+                    </strong>{" "}
+                    <br />
+                    <span className="">
+                      {user?.primaryEmailAddress?.emailAddress || null}
+                    </span>
+                  </p>
+                </div>
+              </a>
+            </div>
+          )}
         </div>
       </SheetContent>
     </Sheet>

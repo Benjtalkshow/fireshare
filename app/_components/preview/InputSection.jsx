@@ -71,7 +71,7 @@ const InputSection = ({ id, shortUrl, userEmail }) => {
           ref={inputRef}
         />
         <Copy
-          className="absolute top-2 right-2 text-gray-300 cursor-pointer"
+          className="absolute top-2 right-2 text-teal-600 cursor-pointer"
           onClick={handleCopy}
         />
       </div>

@@ -20,6 +20,8 @@ import {
 } from "../../utils/firebase";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { deleteObject, getStorage, ref } from "firebase/storage";
+import { app } from "../../firebase/firebase";
 
 export default function Table() {
   const { user, isSignedIn } = useUser();
@@ -27,6 +29,7 @@ export default function Table() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [loading, setLoading] = useState(true);
+  const storage = getStorage(app)
 
   useEffect(() => {
     if (isSignedIn && user) {
@@ -69,6 +72,8 @@ export default function Table() {
           const fileToDelete = files.find((file) => file.doc_id === fileId);
           if (fileToDelete) {
             await deleteFile(fileId, fileToDelete.fileName);
+            const fileRef = ref(storage, `upload/bg.jpg`);
+            await deleteObject(fileRef);
           }
         }
       }

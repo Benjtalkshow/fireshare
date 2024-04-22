@@ -35,13 +35,13 @@ const Upgrade = () => {
                 <span className="text-sm font-medium text-gray-700">/month</span>
               </p>
 
-              <a
-                className="mt-4 block rounded-none border border-teal-600  bg-teal-600 px-12 py-3 text-center text-sm font-medium text-white hover:bg-transparent hover:text-teal-600 focus:outline-none focus:ring-0 active:text-teal-600 sm:mt-6"
+              <button
+                className="mt-4 block w-full rounded-none border border-teal-600  bg-teal-600 px-12 py-3 text-center text-sm font-medium text-white hover:bg-transparent hover:text-teal-600 focus:outline-none focus:ring-0 active:text-teal-600 sm:mt-6"
                 href="#"
                 onClick={handleToast}
               >
                 Get Started
-              </a>
+              </button>
             </div>
 
             <div className="p-6 sm:px-8">

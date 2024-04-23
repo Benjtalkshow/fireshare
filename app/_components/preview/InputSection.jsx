@@ -7,11 +7,13 @@ import { Button } from "../../../components/ui/button";
 import { updateFilePassword } from "../../../utils/firebase";
 import { sendEmail } from "../../../utils/axios";
 
-const InputSection = ({ id, shortUrl, userEmail }) => {
+const InputSection = ({ id, shortUrl, userEmail, userPassword, userName }) => {
   const inputRef = useRef(null);
   const [enablePassword, setEnablePassword] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [savingPassword, setSavingPassword] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   const handleCopy = () => {
     if (inputRef.current) {
@@ -24,18 +26,24 @@ const InputSection = ({ id, shortUrl, userEmail }) => {
   const handlePasswordCheckbox = () => {
     setEnablePassword(!enablePassword);
   };
+
   const handleSavePassword = async () => {
     try {
       if (!password.trim()) {
         toast.error("Empty password");
       } else {
+        setSavingPassword(true);
         await updateFilePassword(id, password);
-        toast.success("Password Added!");
+        toast.success("Password Saved!");
         setPassword("");
+        setTimeout(() => {
+          setSavingPassword(false);
+        }, 3000); // Reset to "Save" after 3 seconds
       }
     } catch (error) {
       console.error("Error fetching file info:", error);
       toast.error("Error", error);
+      setSavingPassword(false);
     }
   };
 
@@ -44,17 +52,31 @@ const InputSection = ({ id, shortUrl, userEmail }) => {
       email: email,
       id: id,
       userEmail: userEmail,
-      shortUrl: shortUrl
+      shortUrl: shortUrl,
+      userPassword: userPassword,
+      userName: userName,
     };
-    
+    setSendingEmail(true);
     sendEmail(data)
       .then((response) => {
-        console.log(response.data);
+        toast.success("Email Sent!");
+        setEmail("");
+        setTimeout(() => {
+          setSendingEmail(false);
+        }, 3000);
       })
       .catch((error) => {
-        console.error(error);
+        if (error.response && error.response.status === 405) {
+          console.error('Error 405:', error.response.data);
+          toast.error('Error Sending Email: Method Not Allowed');
+        } else {
+          console.error(error);
+          toast.error('Error Sending Email');
+        }
+        setSendingEmail(false);
       });
   };
+
 
   return (
     <div
@@ -97,13 +119,13 @@ const InputSection = ({ id, shortUrl, userEmail }) => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <Button
-            className="w-full sm:w-fit cursor-pointer"
+            className="w-full sm:w-fit cursor-pointer bg-teal-600"
             disabled={
               password.trim() && password.trim().length > 3 ? false : true
             }
             onClick={handleSavePassword}
           >
-            Save
+            {savingPassword ? "Saving..." : "Save"}
           </Button>
         </div>
       )}
@@ -124,7 +146,7 @@ const InputSection = ({ id, shortUrl, userEmail }) => {
           disabled={email.trim() && email.trim().length > 5 ? false : true}
           onClick={handleSendEmail}
         >
-          Send Email
+          {sendingEmail ? "Sending..." : "Send Email"}
         </Button>
       </div>
     </div>

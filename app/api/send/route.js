@@ -11,7 +11,7 @@ export async function POST (request) {
     // console.log('Parsed Request Body:', response);
     const data = await resend.emails.send({
       from: 'fireshare@resend.dev',
-      to: [`${response?.email}`],
+      to: [`${response?.userEmail}`],
       subject: 'Testing',
       react: EmailTemplate({ response }),
     });

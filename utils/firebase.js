@@ -13,7 +13,7 @@ import {
 import { app } from "../firebase/firebase";
 import { toast } from "react-hot-toast";
 import RandomStrings from "./RandomString";
-import { deleteObject, getStorage, ref } from "firebase/storage";
+import { deleteObject, getMetadata, getStorage, ref } from "firebase/storage";
 
 const db = getFirestore(app);
 const storage = getStorage(app);
@@ -37,7 +37,6 @@ export const getFileInfo = async (userId) => {
 
     if (userSnapshot.exists()) {
       const fileInfo = userSnapshot.data();
-      console.log("File info:", fileInfo);
       return fileInfo;
     } else {
       console.log("No such document");
@@ -101,42 +100,23 @@ export const fetchUserFiles = async (userId) => {
   }
 };
 
-// export const deleteFile = async (fileId) => {
-//   try {
-//     const docRef = doc(db, "usersAndUploads", fileId);
-//     await deleteDoc(docRef);
-//     console.log(`File with ID ${fileId} deleted successfully.`);
-//     toast.success(`File with ID ${fileId} deleted successfully.`)
-//   } catch (error) {
-//     console.error(`Error deleting file with ID ${fileId}: ${error}`);
-//     toast.error(`Error deleting file with ID ${fileId}: ${error}`)
-//   }
-// };
 
 export const deleteFile = async (fileId, fileNames) => {
   try {
     const docRef = doc(db, "usersAndUploads", fileId);
     const docSnapshot = await getDoc(docRef);
-    console.log(`Document exists: ${docSnapshot.exists()}`);
     if (docSnapshot.exists()) {
-      const fileName = docSnapshot.data().fileName;
-      console.log(`File name: ${fileName}`);
-      // Delete the file from Firebase Storage
-      const fileRef = ref(storage, `upload/${fileName}`);
-      await deleteObject(fileRef);
-      console.log(`File ${fileName} deleted successfully from Firebase Storage.`);
-      toast.success(`File ${fileName} deleted successfully from Firebase Storage.`);
       // Delete the file from Firestore
       await deleteDoc(docRef);
-      console.log(`File with ID ${fileId} deleted successfully from Firestore.`);
-      toast.success(`File with ID ${fileId} deleted successfully.`);
+      console.log(`File ${fileNames} deleted successfully from Firebase Storage.`);
+      toast.success(`File ${fileNames} deleted successfully from Firebase Storage.`);
     } else {
       console.log("No such document");
       toast.error("No such document");
     }
   } catch (error) {
-    console.error(`Error deleting file with ID ${fileId}: ${error}`);
-    toast.error(`Error deleting file with ID ${fileId}: ${error}`);
+    console.error(`Error deleting file with ID ${fileNames}: ${error}`);
+    toast.error(`Error deleting file with ID ${fileNames}: ${error}`);
   }
 };
 
@@ -157,10 +137,27 @@ export const deleteMultipleFiles = async (userId, name) => {
     });
 
     await batch.commit();
-    console.log(`All files for user ${userId} deleted successfully.`);
     toast.success(`All files for user ${name} deleted successfully.`);
   } catch (error) {
-    console.error(`Error deleting files for user ${userId}: ${error}`);
+    console.error(`${error}`);
     toast.error(`Error deleting files for user ${name}: ${error}`);
   }
+};
+
+export const deleteStorageFile = (fName) => {
+  console.log(fName);
+  const desertRef = ref(storage, `upload/${fName}`);
+  getMetadata(desertRef)
+    .then((metadata) => {
+      deleteObject(desertRef)
+        .then(() => {
+          console.log("File deleted successfully");
+        })
+        .catch((error) => {
+          console.error("Error deleting file:", error);
+        });
+    })
+    .catch((error) => {
+      console.error("File does not exist or error getting metadata:", error);
+    });
 };

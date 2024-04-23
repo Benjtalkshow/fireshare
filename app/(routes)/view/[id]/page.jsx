@@ -12,7 +12,6 @@ const View = () => {
     const fetchFileInfo = async () => {
       try {
         const info = await getFileInfo(id);
-        console.log("File info:", info);
         setFileInfo(info);
       } catch (error) {
         console.error("Error fetching file info:", error);

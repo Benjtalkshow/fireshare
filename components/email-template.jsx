@@ -14,58 +14,50 @@ import {
 } from "@react-email/components";
 
 export const EmailTemplate = ({ response }) => {
-
   return (
-  <Html>
-  <Head />
-  <Preview>AWS Email Verification</Preview>
-  <Body style={main}>
-    <Container style={container}>
-      <Section style={coverSection}>
-        <Section style={imageSection}>
-        </Section>
-        <Section style={upperSection}>
-          <Heading style={h1}>Verify your email address {response?.email}</Heading>
-          <Text style={mainText}>
-            Thanks for starting the new AWS account creation process. We
-            want to make sure it's really you. Please enter the following
-            verification code when prompted. If you don&apos;t want to
-            create an account, you can ignore this message.
-          </Text>
-          <Section style={verificationSection}>
-            <Text style={verifyText}>Verification code</Text>
-
-            <Text style={codeText}>{response?.id}</Text>
-            <Text style={validityText}>
-              (This code is valid for 10 minutes)
-            </Text>
+    <Html>
+      <Head />
+      <Preview>AWS Email Verification</Preview>
+      <Body style={main}>
+        <Container style={container}>
+          <Section style={coverSection}>
+            <Section style={imageSection}>
+              <Heading>FireShare</Heading>
+            </Section>
+            <Section style={upperSection}>
+              <Heading style={h1}>
+                {response?.userEmail} just shared a file with you
+              </Heading>
+              <Text style={mainText}>
+                Our file-sharing platform makes it easy to upload, store, and
+                share your files with anyone, anywhere.
+              </Text>
+              <Section style={verificationSection}>
+                <Text style={verifyText}>Password</Text>
+                {response?.password.trim() && (
+                  <Text style={codeText}>{response?.password || ""}</Text>
+                )}
+              </Section>
+            </Section>
+            <Hr />
+            <Section style={lowerSection}>
+              <Text style={cautionText}>
+                FireShare Services will never email you and ask you to disclose
+                or verify your password, credit card, or banking account number.
+              </Text>
+            </Section>
           </Section>
-        </Section>
-        <Hr />
-        <Section style={lowerSection}>
-          <Text style={cautionText}>
-            Amazon Web Services will never email you and ask you to disclose
-            or verify your password, credit card, or banking account number.
+          <Text style={footerText}>
+            Clink the Link below to download your file
+            <Link href={response?.shortUrl} target="_blank" style={link}>
+              Firehare.com
+            </Link>
           </Text>
-        </Section>
-      </Section>
-      <Text style={footerText}>
-        This message was produced and distributed by Amazon Web Services,
-        Inc., 410 Terry Ave. North, Seattle, WA 98109. © 2022, Amazon Web
-        Services, Inc.. All rights reserved. AWS is a registered trademark
-        of{" "}
-       <Link href={response?.shortUrl} target="_blank" style={link}>
-          Amazon.com
-        </Link>
-
-        .
-      </Text>
-    </Container>
-  </Body>
-</Html>
-);
+        </Container>
+      </Body>
+    </Html>
+  );
 };
-
 
 const main = {
   backgroundColor: "#fff",
@@ -104,14 +96,16 @@ const text = {
 };
 
 const imageSection = {
-  backgroundColor: "#252f3d",
+  backgroundColor: "#0d9488",
+  color: "#000000",
+  fontSize: "18px",
   display: "flex",
   padding: "20px 0",
   alignItems: "center",
   justifyContent: "center",
 };
 
-const coverSection = { backgroundColor: "#fff" };
+const coverSection = { backgroundColor: "#fff"};
 
 const upperSection = { padding: "25px 35px" };
 
@@ -119,7 +113,7 @@ const lowerSection = { padding: "25px 35px" };
 
 const footerText = {
   ...text,
-  fontSize: "12px",
+  fontSize: "14px",
   padding: "0 20px",
 };
 

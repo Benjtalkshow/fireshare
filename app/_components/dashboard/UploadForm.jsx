@@ -6,6 +6,7 @@ import UploadPreview from "./UploadPreview";
 import { useUser } from "@clerk/nextjs";
 import { app } from "../../../firebase/firebase";
 import {
+  deleteObject,
   getDownloadURL,
   getStorage,
   ref,
@@ -20,7 +21,7 @@ import {
   collection,
 } from "firebase/firestore";
 import RandomStrings from "../../../utils/RandomString";
-import { saveInfo } from "../../../utils/firebase";
+import { deleteStorageFile, saveInfo } from "../../../utils/firebase";
 import { useRouter } from "next/navigation";
 
 const UploadForm = () => {
@@ -41,16 +42,22 @@ const UploadForm = () => {
       setFile(null);
       return;
     } else {
-      const allowedTypes = ["image/svg+xml", "image/png", "image/jpeg", "image/gif"];
+      const allowedTypes = [
+        "image/svg+xml",
+        "image/png",
+        "image/jpeg",
+        "image/gif",
+      ];
       if (!allowedTypes.includes(file.type)) {
         console.log("Invalid file type");
-        toast.error("Invalid file type. Only SVG, PNG, JPG, JPEG, and GIF files are allowed.");
+        toast.error(
+          "Invalid file type. Only SVG, PNG, JPG, JPEG, and GIF files are allowed."
+        );
         setFile(null);
         return;
       }
 
       setFile(file);
-      console.log(file);
     }
   };
 
@@ -64,7 +71,8 @@ const UploadForm = () => {
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        const currentProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        const currentProgress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log("Upload is " + currentProgress + "% done");
         setProgress(currentProgress);
       },
@@ -77,7 +85,6 @@ const UploadForm = () => {
       async () => {
         try {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          console.log("File available at", downloadURL);
           const doc_id = await saveInfo(file, downloadURL, user);
           setId(doc_id);
 
@@ -86,7 +93,7 @@ const UploadForm = () => {
           setTimeout(() => {
             router.push("/preview/" + doc_id);
             toast.dismiss(redirectingToast);
-          }, 4000 * 2);
+          }, 4000 * 4);
 
           setUploadStatus("Uploaded!");
         } catch (error) {
@@ -105,10 +112,14 @@ const UploadForm = () => {
     };
   }, []);
 
+
+
   return (
     <>
       {uploadStatus === "Uploaded!!" ? (
-        <div className="w-full font-semibold text-center px-2 sm:p-5 md:p-10 lg:p-20">Redirecting...</div>
+        <div className="w-full font-semibold text-center px-2 sm:p-5 md:p-10 lg:p-20">
+          Redirecting...
+        </div>
       ) : (
         <div className="w-full">
           <h1 className="text-3xl md:text-4xl font-extrabold py-10 text-center">
@@ -158,7 +169,6 @@ const UploadForm = () => {
           {/* upload preview */}
           {file && <UploadPreview file={file} />}
           {progress > 0 && <ProgressBar progress={progress} />}
-
           {/* buttons */}
           <div className="my-5 space-x-5">
             <Button
@@ -172,9 +182,7 @@ const UploadForm = () => {
               onClick={() => {
                 setFile(null);
                 setProgress(0);
-                setUploadStatus(
-                  "Upload"
-                ); 
+                setUploadStatus("Upload");
               }}
               className="px-10 py-3 bg-transparent hover:bg-gray-100 border-[1px] border-teal-600 rounded-none text-teal-600"
             >
